@@ -6,9 +6,10 @@ import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 import ExpressMongoSanitize from "express-mongo-sanitize";
 import xss from "xss-clean";
-import { AppError } from "./utils/appError.js";
+import AppError from "./utils/appError.js";
 import { globalError } from "./controllers/globalErrorHandeler.js";
 import cors from "cors";
+import userRouter from "./routes/userRoutes.js";
 
 export const app = express();
 app.use(helmet());
@@ -34,6 +35,8 @@ if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 app.use(express.static("./public"));
+
+app.use("/api/v1/users", userRouter);
 
 /////handel invalid routes and must be after all midlleware
 

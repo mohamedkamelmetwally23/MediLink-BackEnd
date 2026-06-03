@@ -1,4 +1,4 @@
-import { AppError } from '../utils/appError.js';
+import AppError from "../utils/appError.js";
 
 function castError(err) {
   const message = `invalid ${err.path} : ${err.value}`;
@@ -12,7 +12,7 @@ function duplicateError(err) {
 function ValidationError(err) {
   const error = Object.values(err.errors)
     .map((el) => el.message)
-    .join('.  ');
+    .join(".  ");
   return new AppError(`Invalid input data. ${error}`, 400);
 }
 
@@ -31,23 +31,23 @@ function prodError(err, res) {
       message: err.message,
     });
   } else {
-    console.error('error🐦‍🔥', err);
+    console.error("error🐦‍🔥", err);
     res.status(500).json({
-      status: 'error',
-      message: 'something went wrong',
+      status: "error",
+      message: "something went wrong",
     });
   }
 }
 export function globalError(err, req, res, next) {
   err.statusCode = err.statusCode || 500;
-  err.status = err.status || 'error';
-  if (process.env.NODE_ENV == 'development') {
+  err.status = err.status || "error";
+  if (process.env.NODE_ENV == "development") {
     devError(err, res);
-  } else if (process.env.NODE_ENV == 'production') {
-    if (err.name === 'CastError') err = castError(err);
+  } else if (process.env.NODE_ENV == "production") {
+    if (err.name === "CastError") err = castError(err);
 
     if (err.code === 11000) err = duplicateError(err);
-    if (err.name === 'ValidationError') err = ValidationError(err);
+    if (err.name === "ValidationError") err = ValidationError(err);
 
     prodError(err, res);
   }
