@@ -30,7 +30,9 @@ export const signUp = catchAsync(async (req, res, next) => {
     password,
     otp,
   };
-  await client.set(key, JSON.stringify(value));
+  await client.set(key, JSON.stringify(value), {
+    EX: 300,
+  });
   if (process.env.NODE_ENV === "development") {
     console.log("OTP:", otp);
   } else {
@@ -53,6 +55,7 @@ export const verifyOTP = catchAsync(async (req, res, next) => {
     password,
     confirmpassword: password,
   });
+  await client.del(`signUp:${phone}`);
   res.status(200).json({
     status: "success",
     data: {
