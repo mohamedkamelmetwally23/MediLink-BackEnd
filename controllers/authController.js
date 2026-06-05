@@ -170,13 +170,15 @@ export const forgetpassword = catchAsync(async (req, res, next) => {
   if (process.env.NODE_ENV === "development") {
     console.log("OTP:", otp);
   } else {
-    await sendOTP(phone, otp);
+    // await sendOTP(phone, otp);
+    console.log("OTP:", otp);
   }
 
   res.status(200).json({
     status: "success",
     message: "check your phone SMS we send OTP verification to you",
     phone,
+    otp,
   });
 });
 export const verifyForgetPassword = catchAsync(async (req, res, next) => {
